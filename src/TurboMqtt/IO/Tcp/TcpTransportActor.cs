@@ -231,11 +231,7 @@ internal sealed class TcpTransportActor : UntypedActor
             // Check for TLS
             if (TcpOptions.TlsOptions.UseTls)
             {
-                var sslStream = new SslStream(
-                    innerStream: _tcpStream,
-                    leaveInnerStreamOpen: false,
-                    userCertificateValidationCallback: TcpOptions.TlsOptions.ServerCertificateValidator,
-                    userCertificateSelectionCallback: TcpOptions.TlsOptions.LocalCertificateSelector);
+                var sslStream = new SslStream(_tcpStream, false);
                 _tcpStream = sslStream;
                 await sslStream.AuthenticateAsClientAsync(TcpOptions.TlsOptions.SslOptions!, ct);
             }

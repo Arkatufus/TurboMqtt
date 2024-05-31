@@ -18,8 +18,4 @@ public sealed record ClientTlsOptions
     public bool UseTls { get; init; } = false;
     
     public SslClientAuthenticationOptions? SslOptions { get; init; }
-    
-    public RemoteCertificateValidationCallback? ServerCertificateValidator { get; set; }
-    
-    public LocalCertificateSelectionCallback? LocalCertificateSelector { get; set; }
 }

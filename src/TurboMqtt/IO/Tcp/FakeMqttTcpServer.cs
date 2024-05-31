@@ -15,7 +15,7 @@ using TurboMqtt.Protocol;
 
 namespace TurboMqtt.IO.Tcp;
 
-internal sealed record MqttTcpServerOptions
+public sealed record MqttTcpServerOptions
 {
     public MqttTcpServerOptions(string host, int port)
     {
@@ -38,10 +38,6 @@ internal sealed record MqttTcpServerOptions
     public int Port { get; init; }
 
     public SslServerAuthenticationOptions? SslOptions { get; init; }
-    
-    public RemoteCertificateValidationCallback? ClientCertificateValidator { get; init; }
-    
-    public LocalCertificateSelectionCallback? LocalCertificateSelector { get; init; }
 }
 
 /// <summary>
@@ -168,11 +164,7 @@ internal sealed class FakeMqttTcpServer
             {
                 try
                 {
-                    var sslStream = new SslStream(
-                        innerStream: readingStream,
-                        leaveInnerStreamOpen: false,
-                        userCertificateValidationCallback: _options.ClientCertificateValidator,
-                        userCertificateSelectionCallback: _options.LocalCertificateSelector);
+                    var sslStream = new SslStream(readingStream, false);
                     readingStream = sslStream;
                     await sslStream.AuthenticateAsServerAsync(_options.SslOptions, _shutdownTcs.Token);
                     _log.Info("Server authenticated successfully");
